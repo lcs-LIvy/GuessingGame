@@ -30,4 +30,4 @@ I wrote this starter game for my ICS3U course at Lakefield College School.
 
 When you make the game your own, add to this list. Name any AI tool you used and what you used it for. Name any code, images or sounds that came from somewhere else, and say where they came from.
 
-- Starter game: Mr. Gordon, ICS3U
+- Starter game: Ivy Liu
