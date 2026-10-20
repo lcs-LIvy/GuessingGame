@@ -13,6 +13,9 @@
 //  It does not tell you if your guess is too high or too low.
 //  That part is up to you.
 //
+//  NEW FOR MAKE IT YOURS
+//  A wrong guess also says Hot, Warm, or Cold.
+//
 
 import SwiftUI
 
@@ -32,14 +35,15 @@ struct GuessingGameView: View {
     // When one of them changes, the screen updates by itself.
 
     // The number the player is trying to find. The app picks it at random.
-    @State var secretNumber: Int = Int.random(in: lowestNumber...highestNumber)
+    //@State var secretNumber: Int = Int.random(in: lowestNumber...highestNumber)
+    @State var secretNumber: Int = 24
 
     // The guess the player is about to make. It starts in the middle.
     @State var guess: Int = (lowestNumber + highestNumber) / 2
 
     // How many guesses the player has made in this game.
     @State var guessCount: Int = 0
-
+    @State var gamesWonCount: Int = 0
     // The message shown to the player, with a symbol and a colour to match it.
     @State var message: String = "I'm thinking of a number from \(lowestNumber) to \(highestNumber)."
     @State var messageSymbol: String = "questionmark.circle.fill"
@@ -50,98 +54,105 @@ struct GuessingGameView: View {
 
     // MARK: - Computed properties
 
-    var body: some View {
-        VStack(spacing: 20) {
+        var body: some View {
+            VStack(spacing: 20) {
 
-            // The title at the top of the screen.
-            HStack {
-                Image(systemName: "sparkle.magnifyingglass")
-                Text("Guessing Game")
-            }
-            .font(.largeTitle)
-            .bold()
-            .foregroundStyle(Color.indigo)
-            // Shrink the title a little if it does not fit on one line.
-            .lineLimit(1)
-            .minimumScaleFactor(0.5)
+                // The title at the top of the screen.
+                HStack {
+                    Image(systemName: "sparkle.magnifyingglass")
+                    Text("Guessing Game")
+                }
+                .font(.largeTitle)
+                .bold()
+                .foregroundStyle(Color.indigo)
+                // Shrink the title a little if it does not fit on one line.
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
 
-            Spacer()
+                Spacer()
 
-            // The message card: what the game has to say to you.
-            VStack(spacing: 12) {
-                Image(systemName: messageSymbol)
-                    .font(.system(size: 60))
-                    .foregroundStyle(messageColor)
-                Text(message)
-                    .font(.title2)
-                    .multilineTextAlignment(.center)
-            }
-            .padding()
-            .frame(maxWidth: .infinity, minHeight: 180)
-            .background(messageColor.opacity(0.15))
-            .clipShape(RoundedRectangle(cornerRadius: 24))
+                // The message card: what the game has to say to you.
+                VStack(spacing: 12) {
+                    Image(systemName: messageSymbol)
+                        .font(.system(size: 60))
+                        .foregroundStyle(messageColor)
+                    Text(message)
+                        .font(.title2)
+                        .multilineTextAlignment(.center)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, minHeight: 180)
+                .background(messageColor.opacity(0.15))
+                .clipShape(RoundedRectangle(cornerRadius: 24))
 
-            Spacer()
+                Spacer()
 
-            // The guess you are about to make, shown nice and big.
-            // TRY: Change the size of this number from 96 to something else.
-            Text("\(guess)")
-                .font(.system(size: 96, weight: .bold))
+                // The guess you are about to make, shown nice and big.
+                // TRY: Change the size of this number from 96 to something else.
+                Text("\(guess)")
+                    .font(.system(size: 96, weight: .bold))
+                    .monospacedDigit()
+
+                // Four buttons to change the guess.
+                // The code inside the braces runs when that button is clicked.
+                HStack(spacing: 8) {
+                    Button("-10") {
+                        lowerGuessByTen()
+                    }
+                    Button("-1") {
+                        lowerGuessByOne()
+                    }
+                    Button("+1") {
+                        raiseGuessByOne()
+                    }
+                    Button("+10") {
+                        raiseGuessByTen()
+                    }
+                }
+                .buttonStyle(.bordered)
+                .font(.title3)
+                .bold()
                 .monospacedDigit()
+                .disabled(gameIsOver)
 
-            // Four buttons to change the guess.
-            // The code inside the braces runs when that button is clicked.
-            HStack(spacing: 8) {
-                Button("-10") {
-                    lowerGuessByTen()
+                // Show the Guess button while the game is on,
+                // and the Play Again button once the number is found.
+                if gameIsOver {
+                    Button("Play Again", systemImage: "arrow.clockwise") {
+                        startNewGame()
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .tint(Color.green)
+                } else {
+                    Button("Guess", systemImage: "hand.point.up.left.fill") {
+                        checkGuess()
+                    }
+                    .buttonStyle(.borderedProminent)
                 }
-                Button("-1") {
-                    lowerGuessByOne()
-                }
-                Button("+1") {
-                    raiseGuessByOne()
-                }
-                Button("+10") {
-                    raiseGuessByTen()
-                }
-            }
-            .buttonStyle(.bordered)
-            .font(.title3)
-            .bold()
-            .monospacedDigit()
-            .disabled(gameIsOver)
 
-            // Show the Guess button while the game is on,
-            // and the Play Again button once the number is found.
-            if gameIsOver {
-                Button("Play Again", systemImage: "arrow.clockwise") {
-                    startNewGame()
+                HStack {
+                    Image(systemName: "dice.fill")
+                    Text("Guesses so far: \(guessCount)")
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(Color.green)
-            } else {
-                Button("Guess", systemImage: "hand.point.up.left.fill") {
-                    checkGuess()
-                }
-                .buttonStyle(.borderedProminent)
-            }
+                .font(.headline)
+                .foregroundStyle(Color.secondary)
 
-            HStack {
-                Image(systemName: "dice.fill")
-                Text("Guesses so far: \(guessCount)")
+                HStack {
+                    Image(systemName: "trophy.fill")
+                    Text("Games won: \(gamesWonCount)")
+                }
+                .font(.headline)
+                .foregroundStyle(Color.secondary)
             }
-            .font(.headline)
-            .foregroundStyle(Color.secondary)
+            .padding(32)
+            .font(.title2)
+            .fontDesign(.rounded)
+            .controlSize(.large)
+            // TRY: Change indigo to another colour, such as teal, pink or orange.
+            .tint(Color.indigo)
+            // How big the game's window is on the Mac. It can be made taller or wider.
+            .frame(minWidth: 420, minHeight: 640)
         }
-        .padding(32)
-        .font(.title2)
-        .fontDesign(.rounded)
-        .controlSize(.large)
-        // TRY: Change indigo to another colour, such as teal, pink or orange.
-        .tint(Color.indigo)
-        // How big the game's window is on the Mac. It can be made taller or wider.
-        .frame(minWidth: 420, minHeight: 640)
-    }
 
     // MARK: - Functions
 
@@ -151,30 +162,57 @@ struct GuessingGameView: View {
         // One more guess has been made.
         guessCount += 1
 
+        // Calculate the difference before checking conditions
+        var differenceFromSecretNumber: Int = guess - secretNumber
+        if guess < secretNumber {
+            differenceFromSecretNumber = secretNumber - guess
+        }
+
+        // Use a flat if / else if structure with && to check multiple conditions at once
         if guess == secretNumber {
+            gamesWonCount += 1
             message = "Yes! \(secretNumber) is my number."
             messageSymbol = "star.circle.fill"
             messageColor = Color.green
             gameIsOver = true
-        } else {
-            // TRY: Change this message. Make it kinder, or sillier.
-            message = "\(guess) is not my number. Try again."
-            messageSymbol = "xmark.circle.fill"
+        } else if guess < secretNumber && differenceFromSecretNumber <= 5 {
+            message = "\(guess) is too low! You are hot."
+            messageSymbol = "flame.fill"
+            messageColor = Color.red
+        } else if guess < secretNumber && differenceFromSecretNumber <= 15 {
+            message = "\(guess) is too low! You are warm."
+            messageSymbol = "sun.max.fill"
             messageColor = Color.orange
-        }
-    }
-
-    // Makes the guess 10 smaller, but never smaller than the lowest number.
-    func lowerGuessByTen() {
-        guess -= 10
-        if guess < lowestNumber {
-            guess = lowestNumber
+        } else if guess < secretNumber {
+            message = "\(guess) is too low! You are cold."
+            messageSymbol = "snowflake"
+            messageColor = Color.blue
+        } else if guess > secretNumber && differenceFromSecretNumber <= 5 {
+            message = "\(guess) is too high! You are hot."
+            messageSymbol = "flame.fill"
+            messageColor = Color.red
+        } else if guess > secretNumber && differenceFromSecretNumber <= 15 {
+            message = "\(guess) is too high! You are warm."
+            messageSymbol = "sun.max.fill"
+            messageColor = Color.orange
+        } else {
+            message = "\(guess) is too high! You are cold."
+            messageSymbol = "snowflake"
+            messageColor = Color.blue
         }
     }
 
     // Makes the guess 1 smaller, but never smaller than the lowest number.
     func lowerGuessByOne() {
         guess -= 1
+        if guess < lowestNumber {
+            guess = lowestNumber
+        }
+    }
+    
+    // Makes the guess 10 smaller, but never smaller than the lowest number.
+    func lowerGuessByTen() {
+        guess -= 10
         if guess < lowestNumber {
             guess = lowestNumber
         }

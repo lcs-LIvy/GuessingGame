@@ -30,4 +30,10 @@ I wrote this starter game for my ICS3U course at Lakefield College School.
 
 When you make the game your own, add to this list. Name any AI tool you used and what you used it for. Name any code, images or sounds that came from somewhere else, and say where they came from.
 
-- Starter game: Mr. Gordon, ICS3U
+### What I added
+
+Warm and cold hints: a wrong guess also says Hot, Warm, or Cold, with its own colour and symbol.
+
+### Credits
+The starting game was written by Ivy Liu.   
+• Warm and cold hints: Gemini (in the browser) suggested the lines; I checked them and typed them in.
