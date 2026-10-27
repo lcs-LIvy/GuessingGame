@@ -33,7 +33,11 @@ When you make the game your own, add to this list. Name any AI tool you used and
 ### What I added
 
 Warm and cold hints: a wrong guess also says Hot, Warm, or Cold, with its own colour and symbol.
+Victory notification: Each time you win a match, it will be displayed below.
+Victory icon: A green thumbs-up appears at the top whenever a victory is achieved.
 
 ### Credits
 The starting game was written by Ivy Liu.   
-• Warm and cold hints: Gemini (in the browser) suggested the lines; I checked them and typed them in.
+Warm and cold hints: Gemini (in the browser) suggested the lines; I checked them and typed them in.
+Victory notification: Gemini (in the browser) suggested the lines; I checked them and typed them in.
+Victory icon: Gemini (in the browser) suggested the lines; I checked them and typed them in.

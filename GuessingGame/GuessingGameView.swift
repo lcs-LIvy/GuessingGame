@@ -71,6 +71,14 @@ struct GuessingGameView: View {
 
                 Spacer()
 
+                // Shows a big green thumbs-up icon in the middle when the game is won.
+                if gameIsOver {
+                    Image(systemName: "hand.thumbsup.fill")
+                        .font(.system(size: 80))
+                        .foregroundStyle(Color.green)
+                        .symbolEffect(.bounce, value: gameIsOver)
+                }
+
                 // The message card: what the game has to say to you.
                 VStack(spacing: 12) {
                     Image(systemName: messageSymbol)
@@ -153,7 +161,6 @@ struct GuessingGameView: View {
             // How big the game's window is on the Mac. It can be made taller or wider.
             .frame(minWidth: 420, minHeight: 640)
         }
-
     // MARK: - Functions
 
     // Checks the player's guess against the secret number.
